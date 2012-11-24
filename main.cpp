@@ -1,5 +1,6 @@
 #include <QtGui/QApplication>
 #include "mainwindow.h"
+#include <opencv/cv.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
@@ -23,8 +24,11 @@ int main(int argc, char *argv[])
     // return -1;
     //}
 
+
     Mat image;
-    image = imread("frame1.ppm", CV_LOAD_IMAGE_COLOR);   // Read the file
+    char* imageInName = "frame1.ppm";
+    char* imageOutName = "frame1_grey.ppm";
+    image = imread(imageInName, CV_LOAD_IMAGE_COLOR);   // Read the file
 
     if(! image.data )                              // Check for invalid input
     {
@@ -32,10 +36,20 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    namedWindow( "Display window", CV_WINDOW_AUTOSIZE );// Create a window for display.
-    imshow( "Display window", image );                   // Show our image inside it.
+     Mat gray_image;
+     //cvtColor( image, gray_image, CV_RGB2GRAY );
+     cvtColor(image,gray_image,CV_RGB2GRAY);
+     imwrite( imageOutName, gray_image );
+
+     namedWindow( imageInName, CV_WINDOW_NORMAL );
+     namedWindow( imageOutName, CV_WINDOW_NORMAL );
+
+     imshow( imageInName, image );
+     imshow(imageOutName , gray_image );
 
     waitKey(0);                                          // Wait for a keystroke in the window
     return 0;
 
 }
+
+
